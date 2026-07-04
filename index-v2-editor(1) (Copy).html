@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miopatias Metabólicas - Quiz Interativo (v2)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e40af;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --light: #f3f4f6;
+            --dark: #111827;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--light);
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .tab-button.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: white;
+        }
+
+        .tab-button:hover {
+            background: white;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-container {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-button {
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .option-button:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .option-button.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+        .option-button.correct {
+            border-color: var(--success);
+            background: #ecfdf5;
+            color: var(--success);
+        }
+
+        .option-button.incorrect {
+            border-color: var(--danger);
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .feedback.success {
+            background: #ecfdf5;
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .feedback.error {
+            background: #fef2f2;
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .progress-section {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3a8a;
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* FLASHCARD STYLES */
+        .flashcard {
+            perspective: 1000px;
+            margin: 20px 0;
+            height: 250px;
+        }
+
+        .flashcard-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            backface-visibility: hidden;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 18px;
+        }
+
+        .flashcard-back {
+            background: var(--light);
+            color: var(--dark);
+            font-size: 14px;
+            transform: rotateY(180deg);
+        }
+
+        /* RESULTS */
+        .results-summary {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .results-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .badge.excellent {
+            background: #d4fc79;
+            color: #365314;
+        }
+
+        .badge.good {
+            background: #a7f3d0;
+            color: #065f46;
+        }
+
+        .badge.review {
+            background: #fed7aa;
+            color: #7c2d12;
+        }
+
+        /* EDITOR STYLES */
+        .editor-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .editor-fab:hover {
+            transform: scale(1.1);
+        }
+
+        .editor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .editor-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editor-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .editor-content h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .editor-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .editor-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .btn-save-edit {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-close-edit {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .material-content {
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .material-content h2 {
+            color: var(--primary);
+            margin: 25px 0 15px 0;
+            font-size: 20px;
+        }
+
+        .material-content h3 {
+            color: var(--secondary);
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .tab-button {
+                font-size: 12px;
+                padding: 10px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .results-score {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 Miopatias Metabólicas</h1>
+            <p>Doença de McArdle e Deficiência de CPT II - 20 Questões + Editor</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('quiz')">📋 Quiz</button>
+            <button class="tab-button" onclick="switchTab('flashcards')">🎴 Flashcards</button>
+            <button class="tab-button" onclick="switchTab('material')">📖 Material</button>
+            <button class="tab-button" onclick="switchTab('progresso')">📊 Progresso</button>
+        </div>
+
+        <div class="content">
+            <!-- QUIZ TAB -->
+            <div id="quiz" class="tab-content active">
+                <div class="progress-section">
+                    <div class="progress-label">
+                        <span>Progresso do Quiz</span>
+                        <span id="progress-text">0/0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-container"></div>
+                <div id="quiz-results" style="display: none;">
+                    <div class="results-summary">
+                        <h2>Sua Pontuação</h2>
+                        <div class="results-score" id="final-score">0%</div>
+                        <div class="results-text" id="results-message"></div>
+                        <div id="badge-container"></div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="restartQuiz()">Refazer Quiz</button>
+                        <button class="btn btn-secondary" onclick="switchTab('material')">Ver Material</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FLASHCARDS TAB -->
+            <div id="flashcards" class="tab-content">
+                <div class="progress-section">
+                    <div class="progress-label">
+                        <span>Flashcard</span>
+                        <span id="flashcard-counter">1/20</span>
+                    </div>
+                </div>
+                <div id="flashcards-container"></div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn btn-secondary" id="prev-flashcard" onclick="previousFlashcard()">← Anterior</button>
+                    <button class="btn btn-secondary" id="next-flashcard" onclick="nextFlashcard()">Próximo →</button>
+                </div>
+            </div>
+
+            <!-- MATERIAL TAB -->
+            <div id="material" class="tab-content">
+                <div class="material-content" id="material-container"></div>
+            </div>
+
+            <!-- PROGRESSO TAB -->
+            <div id="progresso" class="tab-content">
+                <div class="question-container">
+                    <h3>📊 Seu Desempenho</h3>
+                    <div id="progress-stats"></div>
+                </div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="clearProgress()">Limpar Progresso</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDITOR FAB BUTTON -->
+    <button class="editor-fab" onclick="openEditor()" title="Editor de Questões (Professor)">✏️</button>
+
+    <!-- EDITOR MODAL -->
+    <div id="editor-modal" class="editor-modal">
+        <div class="editor-content">
+            <h2>✏️ Editor de Questões</h2>
+            <p style="color: #666; margin-bottom: 15px;">Clique em uma questão para editar ou adicionar nova.</p>
+            
+            <div style="margin-bottom: 15px;">
+                <button class="btn btn-primary" onclick="createNewQuestion()" style="width: 100%;">+ Adicionar Nova Questão</button>
+            </div>
+
+            <div id="questions-list" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 15px;">
+            </div>
+
+            <div id="editor-form" style="display: none;">
+                <form onsubmit="saveQuestion(event)">
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input type="number" id="edit-id" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pergunta</label>
+                        <textarea id="edit-question" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="edit-type" onchange="updateTypeFields()">
+                            <option value="vf">Verdadeiro/Falso</option>
+                            <option value="scenario">Cenário Clínico</option>
+                            <option value="matching">Matching/Relação</option>
+                            <option value="multiple">Múltipla Escolha</option>
+                        </select>
+                    </div>
+
+                    <div id="type-specific-fields"></div>
+
+                    <div class="form-group">
+                        <label>Explicação (Feedback)</label>
+                        <textarea id="edit-explanation" required></textarea>
+                    </div>
+
+                    <div class="editor-buttons">
+                        <button type="submit" class="btn btn-save-edit">💾 Salvar</button>
+                        <button type="button" class="btn btn-close-edit" onclick="cancelEdit()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="editor-buttons">
+                <button class="btn btn-close-edit" onclick="closeEditor()" style="width: 100%;">Fechar Editor</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DATA ============
+        let quizData = [
+            {
+                id: 1,
+                type: "vf",
+                question: "Em um paciente com Doença de McArdle, o CK sérico permanece normal durante os períodos intercríticos.",
+                answer: false,
+                explanation: "❌ FALSO. Na Doença de McArdle, o CK está elevado MESMO em repouso (2-10x LSN). Isso é uma característica distintiva do diagnóstico."
+            },
+            {
+                id: 2,
+                type: "scenario",
+                question: "Homem 28 anos com intolerância ao exercício desde adolescência. Após corrida de 2 minutos (alta intensidade), apresenta dor muscular intensa. Aos 10 minutos de caminhada leve, a dor MELHORA. CK basal: 850 U/L. Qual é o teste diagnóstico MAIS apropriado?",
+                options: [
+                    { text: "NIFT (teste do antebraço não-isquêmico)", correct: true },
+                    { text: "Ressonância magnética muscular", correct: false },
+                    { text: "Biópsia muscular imediata", correct: false },
+                    { text: "Teste de esforço máximo cardíaco", correct: false }
+                ],
+                explanation: "✅ CORRETO! O NIFT é o teste funcional de primeira escolha. A descrição clínica (exercício alta intensidade + second wind + CK elevado) é patognomônica de McArdle."
+            },
+            {
+                id: 3,
+                type: "vf",
+                question: "Exercício aeróbico supervisionado é contraindicado na Doença de McArdle.",
+                answer: false,
+                explanation: "❌ FALSO. Exercício aeróbico supervisionado (40-70% FC máx, 20-40 min, 3-5x/semana) é a INTERVENÇÃO MAIS EFICAZ em McArdle!"
+            },
+            {
+                id: 4,
+                type: "scenario",
+                question: "Mulher 35 anos com múltiplas hospitalizações por rabdomiólise após exercício prolongado ou jejum. Entre crises, está assintomática com CK normal. Acilcarnitinas: ↑C16:0, ↑C18:1. Qual é o diagnóstico?",
+                options: [
+                    { text: "Doença de McArdle", correct: false },
+                    { text: "Deficiência de CPT II", correct: true },
+                    { text: "Miosite por corpos de inclusão", correct: false },
+                    { text: "Distrofia de cinturas", correct: false }
+                ],
+                explanation: "✅ CORRETO! Deficiência de CPT II. Rabdomiólise com gatilhos (exercício prolongado, jejum), CK normal intercrítico, acilcarnitinas anormais = CPT II."
+            },
+            {
+                id: 5,
+                type: "vf",
+                question: "Na Deficiência de CPT II, repouso completo é a melhor abordagem para evitar rabdomiólise.",
+                answer: false,
+                explanation: "❌ FALSO. Repouso completo causa descondicionamento e piora qualidade de vida. Exercício LEVE e CURTO com carboidratos pré-exercício é o correto."
+            },
+            {
+                id: 6,
+                type: "scenario",
+                question: "Paciente com CK elevado em repouso, intolerância a exercício intenso e NIFT mostrando lactato plano + amônia ↑↑. Qual é o próximo passo diagnóstico?",
+                options: [
+                    { text: "Genética PYGM (R50X, G205S)", correct: true },
+                    { text: "Acilcarnitinas plasmáticas", correct: false },
+                    { text: "Repouso absoluto e observação", correct: false },
+                    { text: "Ressonância magnética de todas as estruturas musculares", correct: false }
+                ],
+                explanation: "✅ CORRETO! NIFT com lactato plano é patognomônico de McArdle. Próximo passo: genética PYGM para confirmar (rastrear R50X, G205S)."
+            },
+            {
+                id: 7,
+                type: "vf",
+                question: "Statinas são uma opção terapêutica segura para pacientes com Deficiência de CPT II.",
+                answer: false,
+                explanation: "❌ FALSO. Estatinas são CONTRAINDICADAS em CPT II! Aumentam significativamente o risco de rabdomiólise. Fibratos também."
+            },
+            {
+                id: 8,
+                type: "scenario",
+                question: "Qual é a mutação MAIS comum na Doença de McArdle em populações caucasianas?",
+                options: [
+                    { text: "p.Phe710del", correct: false },
+                    { text: "p.Arg50Ter (R50X)", correct: true },
+                    { text: "p.Gly205Ser (G205S)", correct: false },
+                    { text: "Delecção do gene inteiro", correct: false }
+                ],
+                explanation: "✅ CORRETO! p.Arg50Ter (R50X) representa até 85% dos alelos em caucasianos. p.Gly205Ser é a segunda mais comum (~10%)."
+            },
+            {
+                id: 9,
+                type: "vf",
+                question: "No teste NIFT em CPT II, espera-se um padrão de lactato plano e amônia muito elevada, similar ao padrão de McArdle.",
+                answer: false,
+                explanation: "❌ FALSO. No NIFT em CPT II, o resultado é NORMAL: lactato eleva normalmente (3-4x) e amônia discreta elevação. Isso diferencia de McArdle."
+            },
+            {
+                id: 10,
+                type: "scenario",
+                question: "Qual é a intervenção MAIS eficaz e bem estabelecida para Doença de McArdle?",
+                options: [
+                    { text: "Repouso absoluto permanente", correct: false },
+                    { text: "Creatina em doses altas (150 mg/kg/dia)", correct: false },
+                    { text: "Exercício aeróbico supervisionado (40-70% FC máx, 3-5x/semana)", correct: true },
+                    { text: "Transplante muscular", correct: false }
+                ],
+                explanation: "✅ CORRETO! Exercício aeróbico supervisionado é a intervenção mais eficaz em McArdle, melhorando capacidade e qualidade de vida."
+            },
+            {
+                id: 11,
+                type: "vf",
+                question: "Triheptanoína (aprovada FDA 2020) é um tratamento específico para Deficiência de CPT II.",
+                answer: true,
+                explanation: "✅ VERDADEIRO. Triheptanoína fornece substratos anapléroticos independentes da via CPT, reduzindo significativamente hospitalizações em CPT II."
+            },
+            {
+                id: 12,
+                type: "scenario",
+                question: "Paciente com rabdomiólise recorrente, CK intercrítico normal, NIFT normal, e acilcarnitinas mostrando C16:0 elevado. Qual gene investigar?",
+                options: [
+                    { text: "PYGM", correct: false },
+                    { text: "CPT2", correct: true },
+                    { text: "ALDOLASA", correct: false },
+                    { text: "MALATE-ASPARTATE", correct: false }
+                ],
+                explanation: "✅ CORRETO! Padrão clínico (rabdomiólise recorrente, CK normal intercrítico, acilcarnitinas anormais) aponta para CPT II. Gene: CPT2."
+            },
+            {
+                id: 13,
+                type: "vf",
+                question: "Sacarose pré-exercício é eficaz para reduzir sintomas de intolerância ao exercício em McArdle.",
+                answer: true,
+                explanation: "✅ VERDADEIRO. 30-75g de sacarose (300-500 mL de bebida açucarada) imediatamente antes do exercício melhora significativamente a tolerância em McArdle."
+            },
+            {
+                id: 14,
+                type: "scenario",
+                question: "Qual cenário clínico é MAIS típico de Deficiência de CPT II (não McArdle)?",
+                options: [
+                    { text: "Dor muscular e cãibras DURANTE exercício de 30 segundos (sprint)", correct: false },
+                    { text: "Rabdomiólise após corrida de 45 minutos ou jejum de 8 horas", correct: true },
+                    { text: "CK sempre elevado em repouso (2-10x)", correct: false },
+                    { text: "Melhora rápida dos sintomas com descanso de 10 minutos", correct: false }
+                ],
+                explanation: "✅ CORRETO! CPT II: gatilhos = exercício PROLONGADO + jejum. McArdle: gatilho = exercício INTENSO (curto). CK em CPT II é normal intercrítico."
+            },
+            {
+                id: 15,
+                type: "vf",
+                question: "Uma dieta rica em gorduras de cadeia longa é recomendada para pacientes com CPT II.",
+                answer: false,
+                explanation: "❌ FALSO. Gorduras de cadeia longa DEVEM SER RESTRINGIDAS em CPT II (~15-20% calorias). Dieta deve ser rica em carboidratos (60-70%)."
+            },
+            {
+                id: 16,
+                type: "scenario",
+                question: "Paciente com NIFT normal, genética PYGM negativa, mas história forte de rabdomiólise recorrente. Próximo teste?",
+                options: [
+                    { text: "Assumir diagnóstico negativo", correct: false },
+                    { text: "Acilcarnitinas plasmáticas + genética CPT2", correct: true },
+                    { text: "Alta hospitalar imediata", correct: false },
+                    { text: "Apenas monitoramento clínico", correct: false }
+                ],
+                explanation: "✅ CORRETO! NIFT normal exclui McArdle. Próximo: acilcarnitinas + genética CPT2 para investigar CPT II como diagnóstico alternativo."
+            },
+            {
+                id: 17,
+                type: "vf",
+                question: "Heterozigotos (portadores de uma mutação) em Deficiência de CPT II nunca apresentam sintomas.",
+                answer: false,
+                explanation: "❌ FALSO. Heterozigotos em CPT II PODEM ser sintomáticos devido a efeito dominante-negativo. Uma cópia mutante pode prejudicar a função enzimática."
+            },
+            {
+                id: 18,
+                type: "scenario",
+                question: "Qual é a principal diferença entre as estratégias de tratamento entre McArdle e CPT II?",
+                options: [
+                    { text: "Ambas usam repouso absoluto", correct: false },
+                    { text: "McArdle: exercício supervisionado | CPT II: evitar gatilhos rigorosamente", correct: true },
+                    { text: "Ambas usam Triheptanoína como primeira escolha", correct: false },
+                    { text: "Não há diferença nas estratégias", correct: false }
+                ],
+                explanation: "✅ CORRETO! Abordagens opostas: McArdle PROMOVE exercício supervisionado (adaptação). CPT II EVITA rigorosamente gatilhos (prevenção)."
+            },
+            {
+                id: 19,
+                type: "vf",
+                question: "O fenômeno 'second wind' é patognomônico de Doença de McArdle.",
+                answer: true,
+                explanation: "✅ VERDADEIRO. Second wind (melhora paradoxal de sintomas após 8-10 min de exercício leve) é praticamente único de McArdle, ajudando no diagnóstico clínico."
+            },
+            {
+                id: 20,
+                type: "scenario",
+                question: "Paciente com Deficiência de CPT II bem diagnosticada. Qual medicação DEVE ser evitada?",
+                options: [
+                    { text: "Paracetamol para dor", correct: false },
+                    { text: "Antibióticos comuns", correct: false },
+                    { text: "Statinas para colesterol", correct: true },
+                    { text: "Insulina para controle glicêmico", correct: false }
+                ],
+                explanation: "✅ CORRETO! Statinas E Fibratos são CONTRAINDICADOS em CPT II (aumentam risco de rabdomiólise). Consultar sempre antes de prescrever lipídicos."
+            }
+        ];
+
+        let flashcardsData = [
+            { front: "Qual é o gatilho PRIMÁRIO da Doença de McArdle?", back: "Exercício de ALTA INTENSIDADE e CURTA DURAÇÃO (sprints, levantamento de peso, esforços isométricos)" },
+            { front: "O que é 'Second Wind'?", back: "Melhora paradoxal dos sintomas após 8-10 minutos de exercício leve contínuo - PATOGNOMÔNICO de McArdle" },
+            { front: "Qual é o padrão de lactato no NIFT em McArdle?", back: "Lactato NÃO eleva (curva plana) + amônia ↑↑↑ (>3-5x basal) = diagnóstico confirmado" },
+            { front: "Qual é o PRINCIPAL gatilho para CPT II?", back: "Combinação: jejum PROLONGADO (>4-6h) + exercício PROLONGADO + infecção/febre" },
+            { front: "CK sérica intercrítica: como diferencia McArdle de CPT II?", back: "McArdle: ELEVADO (2-10x LSN) | CPT II: NORMAL (durante crise: >10.000-100.000)" },
+            { front: "Qual é a mutação mais comum de McArdle em caucasianos?", back: "p.Arg50Ter (R50X) = responsável por ~85% dos alelos caucasianos" },
+            { front: "Qual é a intervenção MAIS EFICAZ na Doença de McArdle?", back: "Exercício aeróbico supervisionado: 40-70% FC máx, 20-40 min, 3-5x/semana com aquecimento gradual" },
+            { front: "O que é Triheptanoína (aprovada FDA 2020)?", back: "Triglicerídeo que fornece substratos anapléroticos independentes de CPT - reduz hospitalizações em CPT II" },
+            { front: "Qual medicação é CONTRAINDICADA em CPT II?", back: "Estatinas E Fibratos - aumentam significativamente o risco de rabdomiólise" },
+            { front: "Qual é o resultado esperado do NIFT em CPT II?", back: "NIFT NORMAL: lactato eleva normalmente (3-4x) + amônia discreta = exclui defeitos de carboidratos" },
+            { front: "Qual é a composição dietética ideal em McArdle?", back: "60-65% carboidratos complexos, evitar jejum >4-6h, refeições frequentes" },
+            { front: "Qual é a composição dietética ideal em CPT II?", back: "60-70% carboidratos + restrição de gordura cadeia longa a 15-20%, 5-6 pequenas refeições/dia" },
+            { front: "Qual teste diagnóstico é MAIS específico para McArdle?", back: "NIFT (lactato plano + amônia elevada) = patognomônico de deficiência de glicogênio fosforilase" },
+            { front: "Qual teste diagnóstico é MAIS específico para CPT II?", back: "Acilcarnitinas plasmáticas: ↑C16:0 (palmitoilcarnitina) + ↑C18:1 (oleoilcarnitina) + ↓C2" },
+            { front: "Heterozigotos em CPT II podem ser sintomáticos?", back: "SIM - Efeito dominante-negativo: uma cópia mutante pode prejudicar função enzimática" },
+            { front: "Qual é o mecanismo do 'second wind' em McArdle?", back: "Aumento do fluxo sanguíneo e mobilização de glicose alternativa após exercício leve (vasodilatação)" },
+            { front: "Sacarose pré-exercício funciona em McArdle ou CPT II?", back: "Apenas McArdle - fornece glicose exógena que contorna deficiência de glicogênio muscular" },
+            { front: "Qual gene é mutado em Doença de McArdle?", back: "PYGM - codifica a enzima miofosforilase (glicogênio fosforilase muscular)" },
+            { front: "Qual gene é mutado em Deficiência de CPT II?", back: "CPT2 - codifica a enzima carnitina palmitotransferase II (metabolismo de lipídeos)" },
+            { front: "Repouso completo é recomendado em CPT II?", back: "NÃO - Causa descondicionamento e piora qualidade de vida. Exercício leve e estruturado é melhor" }
+        ];
+
+        const materialContent = `
+<h2>🔬 Guia Prático: Miopatias Metabólicas</h2>
+
+<h3>Doença de McArdle - Características Principais</h3>
+<p><strong>Gatilho:</strong> Exercício de alta intensidade (sprints, levantamento, isométrico)<br>
+<strong>CK intercrítico:</strong> Elevado (2-10x LSN) - marca registrada<br>
+<strong>Teste NIFT:</strong> Lactato plano + Amônia ↑↑↑<br>
+<strong>Gene:</strong> PYGM (mutação R50X ~85% caucasianos)<br>
+<strong>Manejo:</strong> Exercício supervisionado + Sacarose pré-exercício + Dieta high-carb</p>
+
+<h3>Deficiência de CPT II - Características Principais</h3>
+<p><strong>Gatilhos:</strong> Exercício prolongado + jejum + infecção + frio<br>
+<strong>CK intercrítico:</strong> Normal - muda apenas durante crise (>10.000)<br>
+<strong>Teste Específico:</strong> Acilcarnitinas (↑C16:0, ↑C18:1)<br>
+<strong>Gene:</strong> CPT2 (mutação S113L mais comum na forma miopática)<br>
+<strong>Manejo:</strong> Evitar rigorosamente gatilhos + Triheptanoína + Dieta (60-70% carb, <20% gordura cadeia longa)</p>
+
+<h3>Tabela Comparativa Rápida</h3>
+<table style="width:100%; border-collapse:collapse; margin:15px 0;">
+<tr style="background:#f3f4f6;">
+<th style="padding:10px; text-align:left; border-bottom:2px solid #1e40af;">Aspecto</th>
+<th style="padding:10px; text-align:left; border-bottom:2px solid #1e40af;">McArdle</th>
+<th style="padding:10px; text-align:left; border-bottom:2px solid #1e40af;">CPT II</th>
+</tr>
+<tr style="border-bottom:1px solid #e5e7eb;">
+<td style="padding:10px;"><strong>Gatilho</strong></td>
+<td style="padding:10px;">Exercício ALTA intensidade</td>
+<td style="padding:10px;">Exercício PROLONGADO + jejum</td>
+</tr>
+<tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;">
+<td style="padding:10px;"><strong>CK intercrítico</strong></td>
+<td style="padding:10px;">Elevado (2-10x)</td>
+<td style="padding:10px;">Normal</td>
+</tr>
+<tr style="border-bottom:1px solid #e5e7eb;">
+<td style="padding:10px;"><strong>NIFT</strong></td>
+<td style="padding:10px;">Lactato plano, Amônia ↑↑</td>
+<td style="padding:10px;">Normal</td>
+</tr>
+<tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;">
+<td style="padding:10px;"><strong>Teste diagnóstico</strong></td>
+<td style="padding:10px;">NIFT</td>
+<td style="padding:10px;">Acilcarnitinas plasmáticas</td>
+</tr>
+<tr style="border-bottom:1px solid #e5e7eb;">
+<td style="padding:10px;"><strong>Intervençã #1</strong></td>
+<td style="padding:10px;">Exercício supervisionado</td>
+<td style="padding:10px;">Evitar gatilhos rigorosamente</td>
+</tr>
+<tr style="background:#f9fafb;">
+<td style="padding:10px;"><strong>Medicação chave</strong></td>
+<td style="padding:10px;">Sacarose pré-exercício</td>
+<td style="padding:10px;">Triheptanoína (FDA 2020)</td>
+</tr>
+</table>
+
+<h3>Prognóstico</h3>
+<p><strong>McArdle:</strong> Melhora significativa com exercício + nutrição. Maioria mantém vida ativa e independente.<br>
+<strong>CPT II:</strong> Frequência de hospitalizações drasticamente reduzida com evitação de gatilhos + dieta + triheptanoína. Prognóstico favorável na forma miopática adulta.</p>
+
+<p style="margin-top:20px; padding:15px; background:#eff6ff; border-left:4px solid #1e40af; border-radius:6px;">
+<strong>💡 Dica:</strong> Use este material para aprofundar. O quiz ajuda a testar compreensão e identificar lacunas de conhecimento.
+</p>
+`;
+
+        // ============ STATE ============
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+        let currentFlashcard = 0;
+        let quizCompleted = false;
+        let editingId = null;
+
+        // ============ FUNCTIONS ============
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'flashcards') {
+                renderFlashcards();
+            } else if (tabName === 'material') {
+                document.getElementById('material-container').innerHTML = materialContent;
+            } else if (tabName === 'progresso') {
+                updateProgressStats();
+            }
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            quizCompleted = false;
+            document.getElementById('quiz-results').style.display = 'none';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            if (currentQuestion >= quizData.length) {
+                showResults();
+                return;
+            }
+
+            const q = quizData[currentQuestion];
+            let html = `
+                <div class="question-container">
+                    <div class="question-number">Questão ${currentQuestion + 1} de ${quizData.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options" id="options"></div>
+                </div>
+            `;
+
+            document.getElementById('quiz-container').innerHTML = html;
+
+            if (q.type === 'vf') {
+                renderVFOptions(q);
+            } else {
+                renderScenario(q);
+            }
+
+            updateProgress();
+        }
+
+        function renderVFOptions(q) {
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = `
+                <button class="option-button" onclick="answerVF(true)">✓ Verdadeiro</button>
+                <button class="option-button" onclick="answerVF(false)">✗ Falso</button>
+                <div id="feedback"></div>
+            `;
+        }
+
+        function renderScenario(q) {
+            let optionsHtml = q.options.map((opt, idx) => `
+                <button class="option-button" onclick="answerScenario(${idx})">${opt.text}</button>
+            `).join('');
+            
+            document.getElementById('options').innerHTML = optionsHtml + '<div id="feedback"></div>';
+        }
+
+        function answerVF(answer) {
+            handleAnswer(answer === quizData[currentQuestion].answer);
+        }
+
+        function answerScenario(idx) {
+            const isCorrect = quizData[currentQuestion].options[idx].correct;
+            handleAnswer(isCorrect);
+        }
+
+        function handleAnswer(isCorrect) {
+            const q = quizData[currentQuestion];
+            answers.push(isCorrect);
+            
+            if (isCorrect) {
+                score++;
+            }
+
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.innerHTML = `
+                <div class="feedback ${isCorrect ? 'success' : 'error'}">
+                    ${q.explanation}
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-primary" onclick="nextQuestion()" style="max-width: 300px;">
+                        ${currentQuestion === quizData.length - 1 ? '✓ Ver Resultado' : '→ Próxima Questão'}
+                    </button>
+                </div>
+            `;
+
+            document.querySelectorAll('.option-button').forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = 'not-allowed';
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            renderQuestion();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / quizData.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `${currentQuestion}/${quizData.length}`;
+        }
+
+        function showResults() {
+            quizCompleted = true;
+            const percentage = Math.round((score / quizData.length) * 100);
+            
+            let message = '';
+            let badge = '';
+
+            if (percentage >= 90) {
+                message = '🎯 Excelente! Você domina o assunto!';
+                badge = '<div class="badge excellent">Excelente - Pronto para prática</div>';
+            } else if (percentage >= 70) {
+                message = '✅ Bom desempenho! Revise os tópicos com dificuldade.';
+                badge = '<div class="badge good">Bom - Continue estudando</div>';
+            } else {
+                message = '📚 Continue estudando. Use o material de apoio para aprofundar.';
+                badge = '<div class="badge review">Revisar - Foque no material</div>';
+            }
+
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('quiz-results').style.display = 'block';
+            document.getElementById('final-score').textContent = percentage + '%';
+            document.getElementById('results-message').textContent = message;
+            document.getElementById('badge-container').innerHTML = badge;
+
+            saveProgress();
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-container').style.display = 'block';
+            startQuiz();
+        }
+
+        // FLASHCARDS
+        function renderFlashcards() {
+            const container = document.getElementById('flashcards-container');
+            const flashcard = flashcardsData[currentFlashcard];
+            
+            container.innerHTML = `
+                <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-face flashcard-front">
+                            ${flashcard.front}
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            ${flashcard.back}
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px; color: #999; font-size: 14px;">
+                    Clique para virar o cartão
+                </div>
+            `;
+
+            document.getElementById('flashcard-counter').textContent = `${currentFlashcard + 1}/${flashcardsData.length}`;
+            document.getElementById('prev-flashcard').disabled = currentFlashcard === 0;
+            document.getElementById('next-flashcard').disabled = currentFlashcard === flashcardsData.length - 1;
+        }
+
+        function nextFlashcard() {
+            if (currentFlashcard < flashcardsData.length - 1) {
+                currentFlashcard++;
+                renderFlashcards();
+            }
+        }
+
+        function previousFlashcard() {
+            if (currentFlashcard > 0) {
+                currentFlashcard--;
+                renderFlashcards();
+            }
+        }
+
+        // PROGRESS
+        function saveProgress() {
+            const progress = {
+                quizCompleted: quizCompleted,
+                score: score,
+                totalQuestions: quizData.length,
+                percentage: Math.round((score / quizData.length) * 100),
+                date: new Date().toLocaleDateString('pt-BR'),
+                answers: answers
+            };
+            localStorage.setItem('quizProgress', JSON.stringify(progress));
+        }
+
+        function updateProgressStats() {
+            const progress = JSON.parse(localStorage.getItem('quizProgress') || 'null');
+            let statsHtml = '<p>Nenhuma tentativa ainda. <a href="javascript:switchTab(\'quiz\')" style="color:var(--primary); text-decoration:underline;">Comece o quiz!</a></p>';
+
+            if (progress) {
+                statsHtml = `
+                    <p><strong>Última tentativa:</strong> ${progress.date}</p>
+                    <p><strong>Pontuação:</strong> ${progress.score}/${progress.totalQuestions} (${progress.percentage}%)</p>
+                    <div class="progress-bar" style="margin: 15px 0;">
+                        <div class="progress-fill" style="width: ${progress.percentage}%"></div>
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 15px;">
+                        ${progress.percentage >= 90 ? '✅ Você está pronto!' : '📚 Continue praticando!'}
+                    </p>
+                `;
+            }
+
+            document.getElementById('progress-stats').innerHTML = statsHtml;
+        }
+
+        function clearProgress() {
+            if (confirm('Tem certeza? Isso apagará seu histórico.')) {
+                localStorage.removeItem('quizProgress');
+                updateProgressStats();
+                alert('Progresso limpo!');
+            }
+        }
+
+        // EDITOR
+        function openEditor() {
+            document.getElementById('editor-modal').classList.add('active');
+            renderQuestionsList();
+        }
+
+        function closeEditor() {
+            document.getElementById('editor-modal').classList.remove('active');
+            cancelEdit();
+        }
+
+        function renderQuestionsList() {
+            const list = document.getElementById('questions-list');
+            list.innerHTML = quizData.map(q => `
+                <div style="padding:10px; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.2s;" onclick="editQuestion(${q.id})" onmouseover="this.style.background='var(--light)'" onmouseout="this.style.background='white'">
+                    <strong>Q${q.id}:</strong> ${q.question.substring(0, 60)}...
+                </div>
+            `).join('');
+        }
+
+        function editQuestion(id) {
+            editingId = id;
+            const q = quizData.find(x => x.id === id);
+            
+            document.getElementById('edit-id').value = q.id;
+            document.getElementById('edit-question').value = q.question;
+            document.getElementById('edit-type').value = q.type;
+            document.getElementById('edit-explanation').value = q.explanation;
+            
+            updateTypeFields();
+            document.getElementById('editor-form').style.display = 'block';
+        }
+
+        function updateTypeFields() {
+            const type = document.getElementById('edit-type').value;
+            const container = document.getElementById('type-specific-fields');
+            const q = quizData.find(x => x.id === editingId);
+            
+            if (type === 'vf') {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label>Resposta Correta</label>
+                        <select id="edit-answer">
+                            <option value="true" ${q.answer ? 'selected' : ''}>Verdadeiro</option>
+                            <option value="false" ${!q.answer ? 'selected' : ''}>Falso</option>
+                        </select>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="form-group">
+                        <label>Opções (uma por linha, marque a correta com *)</label>
+                        <textarea id="edit-options" placeholder="Opção 1*&#10;Opção 2&#10;Opção 3">${q.options ? q.options.map(o => (o.correct ? o.text + '*' : o.text)).join('\n') : ''}</textarea>
+                    </div>
+                `;
+            }
+        }
+
+        function saveQuestion(e) {
+            e.preventDefault();
+            
+            const id = parseInt(document.getElementById('edit-id').value);
+            const question = document.getElementById('edit-question').value;
+            const type = document.getElementById('edit-type').value;
+            const explanation = document.getElementById('edit-explanation').value;
+            
+            let idx = quizData.findIndex(x => x.id === id);
+            
+            if (type === 'vf') {
+                const answer = document.getElementById('edit-answer').value === 'true';
+                quizData[idx] = { id, type, question, answer, explanation };
+            } else {
+                const optionsText = document.getElementById('edit-options').value;
+                const options = optionsText.split('\n').map(line => {
+                    const correct = line.endsWith('*');
+                    const text = correct ? line.slice(0, -1) : line;
+                    return { text, correct };
+                });
+                quizData[idx] = { id, type, question, options, explanation };
+            }
+            
+            localStorage.setItem('quizData', JSON.stringify(quizData));
+            alert('Questão atualizada com sucesso!');
+            cancelEdit();
+            renderQuestionsList();
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            document.getElementById('editor-form').style.display = 'none';
+        }
+
+        function createNewQuestion() {
+            const newId = Math.max(...quizData.map(q => q.id)) + 1;
+            editingId = newId;
+            
+            quizData.push({
+                id: newId,
+                type: 'vf',
+                question: 'Nova pergunta aqui',
+                answer: true,
+                explanation: 'Explicação aqui'
+            });
+            
+            document.getElementById('edit-id').value = newId;
+            document.getElementById('edit-question').value = '';
+            document.getElementById('edit-type').value = 'vf';
+            document.getElementById('edit-explanation').value = '';
+            document.getElementById('edit-answer').value = 'true';
+            document.getElementById('editor-form').style.display = 'block';
+            renderQuestionsList();
+        }
+
+        // INIT
+        window.addEventListener('load', () => {
+            // Carregar dados salvos se existirem
+            const saved = localStorage.getItem('quizData');
+            if (saved) {
+                quizData = JSON.parse(saved);
+            }
+            startQuiz();
+        });
+    </script>
+</body>
+</html>
